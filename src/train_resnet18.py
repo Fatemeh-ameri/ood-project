@@ -14,7 +14,19 @@ device = "mps" if torch.backends.mps.is_available() else "cpu"
 print(f"Using device: {device}")
 
 # Transform
-transform = transforms.Compose([
+train_transform = transforms.Compose([
+    transforms.RandomCrop(32, padding=4),
+    transforms.RandomHorizontalFlip(),
+
+    transforms.ToTensor(),
+
+    transforms.Normalize(
+        mean=(0.5, 0.5, 0.5),
+        std=(0.5, 0.5, 0.5)
+    )
+])
+
+test_transform = transforms.Compose([
     transforms.ToTensor(),
 
     transforms.Normalize(
@@ -28,14 +40,14 @@ train_dataset = torchvision.datasets.CIFAR10(
     root="./data/raw",
     train=True,
     download=False,
-    transform=transform
+    transform=train_transform
 )
 
 test_dataset = torchvision.datasets.CIFAR10(
     root="./data/raw",
     train=False,
     download=False,
-    transform=transform
+    transform=test_transform
 )
 
 # DataLoaders
