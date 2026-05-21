@@ -14,7 +14,14 @@ device = "mps" if torch.backends.mps.is_available() else "cpu"
 print(f"Using device: {device}")
 
 # Transform
-transform = transforms.ToTensor()
+transform = transforms.Compose([
+    transforms.ToTensor(),
+
+    transforms.Normalize(
+        mean=(0.5, 0.5, 0.5),
+        std=(0.5, 0.5, 0.5)
+    )
+])
 
 # CIFAR-10 dataset
 train_dataset = torchvision.datasets.CIFAR10(
@@ -67,7 +74,7 @@ optimizer = optim.Adam(
 )
 
 # Training
-epochs = 3
+epochs = 10
 
 for epoch in range(epochs):
 
