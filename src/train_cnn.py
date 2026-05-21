@@ -125,3 +125,8 @@ with torch.no_grad():
 accuracy = 100 * correct / total
 
 print(f"Test Accuracy: {accuracy:.2f}%")
+
+
+torch.save(model.state_dict(), "models/simple_cnn_cifar10.pth")
+
+print("Model saved to models/simple_cnn_cifar10.pth")
