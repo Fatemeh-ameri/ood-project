@@ -86,7 +86,7 @@ optimizer = optim.Adam(
 )
 
 # Training
-epochs = 10
+epochs = 20
 
 for epoch in range(epochs):
 
