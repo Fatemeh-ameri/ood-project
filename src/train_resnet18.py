@@ -85,6 +85,12 @@ optimizer = optim.Adam(
     lr=0.001
 )
 
+scheduler = optim.lr_scheduler.StepLR(
+    optimizer,
+    step_size=10,
+    gamma=0.1
+)
+
 # Training
 epochs = 20
 
@@ -117,6 +123,8 @@ for epoch in range(epochs):
         f"Epoch [{epoch+1}/{epochs}] "
         f"Loss: {average_loss:.4f}"
     )
+    
+    scheduler.step()
 
 # Evaluation
 model.eval()
