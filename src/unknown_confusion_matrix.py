@@ -6,8 +6,8 @@ import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torch.utils.data import Subset
 
-from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Device
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -28,27 +28,12 @@ classes = [
     "truck"
 ]
 
-# Known classes
-known_class_names = [
-    "bird",
-    "cat",
-    "deer",
-    "dog",
-    "frog",
-    "horse"
-]
-
 # Unknown classes
 unknown_class_names = [
     "airplane",
     "automobile",
     "ship",
     "truck"
-]
-
-known_class_ids = [
-    classes.index(name)
-    for name in known_class_names
 ]
 
 unknown_class_ids = [
@@ -69,10 +54,8 @@ test_dataset = torchvision.datasets.CIFAR10(
 
 # Unknown subset only
 unknown_indices = [
-
     i for i, (_, label)
     in enumerate(test_dataset)
-
     if label in unknown_class_ids
 ]
 
@@ -90,7 +73,6 @@ unknown_loader = DataLoader(
 
 # CNN model
 model = nn.Sequential(
-
     nn.Conv2d(3, 16, kernel_size=3, padding=1),
     nn.ReLU(),
     nn.MaxPool2d(2),
@@ -126,27 +108,34 @@ true_labels = []
 predicted_labels = []
 
 with torch.no_grad():
-
     for images, labels in unknown_loader:
-
         images = images.to(device)
 
         outputs = model(images)
-
         _, predicted = torch.max(outputs, 1)
 
         true_labels.extend(labels.tolist())
         predicted_labels.extend(predicted.cpu().tolist())
 
-# Confusion matrix
-cm = confusion_matrix(
-    true_labels,
-    predicted_labels,
-    labels=list(range(10))
+# Confusion matrix:
+# rows = true unknown classes
+# columns = predicted CIFAR-10 classes
+cm = np.zeros(
+    (len(unknown_class_names), len(classes)),
+    dtype=int
 )
 
+for true_label, predicted_label in zip(true_labels, predicted_labels):
+    row = unknown_class_ids.index(true_label)
+    col = predicted_label
+    cm[row, col] += 1
+
+print("Rows:", unknown_class_names)
+print("Columns:", classes)
 print("Confusion Matrix:")
-print(cm)
+
+for row in cm:
+    print(row.tolist())
 
 # Plot
 plt.figure(figsize=(10, 5))
@@ -162,8 +151,8 @@ plt.xticks(
 )
 
 plt.yticks(
-    range(len(classes)),
-    classes
+    range(len(unknown_class_names)),
+    unknown_class_names
 )
 
 plt.xlabel("Predicted")
