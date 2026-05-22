@@ -123,7 +123,7 @@ for epoch in range(epochs):
         f"Epoch [{epoch+1}/{epochs}] "
         f"Loss: {average_loss:.4f}"
     )
-    
+
     scheduler.step()
 
 # Evaluation
