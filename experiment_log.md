@@ -99,17 +99,21 @@ A sample is treated as unknown when its maximum softmax confidence is below the 
 | 0.8 | 65.35% | 69.45% |
 | 0.9 | 53.37% | 83.03% |
 
-## 7. MSP AUROC
+## 7. OOD Score Comparison
 
-AUROC was calculated using Maximum Softmax Probability (MSP) as the known-class score.
+AUROC was calculated using several OOD scores on the improved known-only ResNet18 model.
 
 Known samples were labeled as `1`, and unknown samples were labeled as `0`.
 
-| Model | OOD Score | AUROC |
-|---|---|---:|
-| ResNet18, improved known-only setup | MSP confidence | 0.7427 |
+| OOD Score | AUROC |
+|---|---:|
+| MSP confidence | 0.7427 |
+| Energy score, T=1 | 0.7917 |
+| Energy score, T=2 | 0.7940 |
+| Max logit | 0.7862 |
+| Logit margin | 0.7195 |
 
-This result shows that MSP provides some separation between known and unknown samples, but the separation is not complete.
+The improvement from Energy T=1 to Energy T=2 was small, so the result should be interpreted as a minor temperature effect rather than a large gain.
 
 ## 8. Notes
 
@@ -118,4 +122,4 @@ This result shows that MSP provides some separation between known and unknown sa
 - The improved ResNet18 recipe reduced average unknown confidence compared with the earlier ResNet18 setup.
 - MSP thresholding shows a clear trade-off between accepting known samples and rejecting unknown samples.
 - MSP AUROC provides a threshold-independent view of the separation between known and unknown samples.
-- The next step is to test stronger OOD scores, such as energy-based scoring, and compare them with MSP.
+- Energy-based scoring improved AUROC compared with MSP in this setup, although the separation is still not complete.
