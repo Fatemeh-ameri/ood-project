@@ -8,7 +8,10 @@ import torchvision.models as models
 from torch.utils.data import DataLoader
 from torch.utils.data import Subset
 
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, roc_curve
+
+import os
+import matplotlib.pyplot as plt
 
 # Device
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -164,3 +167,41 @@ with torch.no_grad():
 auroc = roc_auc_score(labels, scores)
 
 print(f"MSP AUROC: {auroc:.4f}")
+
+# ROC curve
+fpr, tpr, thresholds = roc_curve(labels, scores)
+
+os.makedirs("reports/figures", exist_ok=True)
+
+plt.figure(figsize=(6, 5))
+
+plt.plot(
+    fpr,
+    tpr,
+    label=f"MSP AUROC = {auroc:.4f}"
+)
+
+plt.plot(
+    [0, 1],
+    [0, 1],
+    linestyle="--",
+    label="Random"
+)
+
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+
+plt.title("MSP ROC Curve for Known vs Unknown Detection")
+
+plt.legend()
+plt.grid(True)
+
+plt.tight_layout()
+
+plt.savefig(
+    "reports/figures/resnet18_msp_roc_curve.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.show()
