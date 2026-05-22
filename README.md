@@ -14,6 +14,7 @@ The experiments use CIFAR-10, starting from baseline classifiers and moving towa
 - Training models on selected known classes only
 - Treating the remaining classes as unknown during evaluation
 - Testing Maximum Softmax Probability (MSP) as a simple OOD baseline
+- Comparing several OOD scores, including MSP, Energy, Max Logit, and Logit Margin
 - Tracking experiments in `experiment_log.md`
 
 ## Current Results
@@ -86,15 +87,23 @@ This shows the trade-off between accepting known samples and rejecting unknown s
 
 ![Unknown rejection threshold comparison](reports/figures/unknown_rejection_threshold_comparison.png)
 
-## MSP AUROC
+## OOD Score Comparison
 
-AUROC was also calculated using MSP confidence as the known-class score.
+AUROC was calculated using several OOD scores on the improved known-only ResNet18 model.
 
-| Model | OOD Score | AUROC |
-|---|---|---:|
-| ResNet18, improved setup | MSP confidence | 0.7427 |
+Known samples were labeled as `1`, and unknown samples were labeled as `0`.
 
-The score is above random separation, but still shows that MSP alone does not fully separate known and unknown samples.
+| OOD Score | AUROC |
+|---|---:|
+| MSP confidence | 0.7427 |
+| Energy score, T=1 | 0.7917 |
+| Energy score, T=2 | 0.7940 |
+| Max logit | 0.7862 |
+| Logit margin | 0.7195 |
+
+Energy-based scoring gave the best AUROC in this setup, with a small improvement from using temperature `T=2`.
+
+![Energy ROC curve](reports/figures/resnet18_energy_roc_curve.png)
 
 ## Unknown Class Predictions
 
@@ -117,11 +126,12 @@ This suggests that the model assigns unknown samples to the closest known classe
 - Data augmentation, longer training, and a learning rate scheduler improved ResNet18 accuracy.
 - The improved ResNet18 setup reduced average unknown confidence compared with the earlier ResNet18 setup.
 - MSP thresholding shows a clear trade-off between accepting known samples and rejecting unknown samples.
+- Energy-based scoring performed better than MSP in this setup, but the separation between known and unknown samples is still not complete.
 
 ## Next Steps
 
-- Add AUROC-style evaluation for OOD scoring
-- Test energy-based OOD scoring
+- Add FPR@95TPR for OOD evaluation
+- Compare MSP and Energy ROC curves in one figure
 - Explore calibration methods such as temperature scaling
 - Refactor repeated dataset/model code into reusable modules
 
@@ -130,6 +140,7 @@ This suggests that the model assigns unknown samples to the closest known classe
 - Python
 - PyTorch
 - Torchvision
+- Scikit-learn
 - Matplotlib
 - NumPy
 - Git / GitHub
