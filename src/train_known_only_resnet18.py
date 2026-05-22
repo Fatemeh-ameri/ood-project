@@ -46,7 +46,10 @@ known_class_ids = [
 print("Known classes:", known_class_names)
 
 # Transform with normalization
-transform = transforms.Compose([
+train_transform = transforms.Compose([
+    transforms.RandomCrop(32, padding=4),
+    transforms.RandomHorizontalFlip(),
+
     transforms.ToTensor(),
 
     transforms.Normalize(
@@ -60,7 +63,7 @@ train_dataset = torchvision.datasets.CIFAR10(
     root="./data/raw",
     train=True,
     download=False,
-    transform=transform
+    transform=train_transform
 )
 
 # Keep only known-class samples
@@ -106,8 +109,15 @@ optimizer = optim.Adam(
     lr=0.001
 )
 
+
+scheduler = optim.lr_scheduler.StepLR(
+    optimizer,
+    step_size=10,
+    gamma=0.1
+)
+
 # Training
-epochs = 10
+epochs = 20
 
 for epoch in range(epochs):
 
@@ -138,6 +148,8 @@ for epoch in range(epochs):
         f"Epoch [{epoch+1}/{epochs}] "
         f"Loss: {average_loss:.4f}"
     )
+
+    scheduler.step()
 
 # Save model
 torch.save(
