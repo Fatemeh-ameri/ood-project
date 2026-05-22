@@ -199,4 +199,12 @@ plt.title("ResNet18 Known vs Unknown Confidence")
 plt.legend()
 
 plt.tight_layout()
+
+
+plt.savefig(
+    "reports/figures/resnet18_known_vs_unknown_confidence.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
 plt.show()

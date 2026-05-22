@@ -1,3 +1,5 @@
+import os
+
 import torch
 import torch.nn as nn
 import torchvision
@@ -8,6 +10,9 @@ from torch.utils.data import Subset
 
 import matplotlib.pyplot as plt
 import numpy as np
+
+# Create output directory
+os.makedirs("reports/figures", exist_ok=True)
 
 # Device
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -161,4 +166,11 @@ plt.ylabel("True")
 plt.title("Predictions for Unknown Classes")
 
 plt.tight_layout()
+
+plt.savefig(
+    "reports/figures/unknown_confusion_matrix.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
 plt.show()
