@@ -115,7 +115,9 @@ Known samples were labeled as `1`, and unknown samples were labeled as `0`.
 
 Energy-based scoring performed better than MSP, max logit, and logit margin in this setup.
 
-The improvement from Energy T=1 to Energy T=2 was small, so the result should be interpreted as a minor temperature effect rather than a large gain.
+The difference between Energy T=1 and Energy T=2 was small.
+
+A combined ROC curve was saved to compare MSP and Energy directly.
 
 ## 8. FPR@95TPR
 
