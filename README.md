@@ -86,6 +86,16 @@ This shows the trade-off between accepting known samples and rejecting unknown s
 
 ![Unknown rejection threshold comparison](reports/figures/unknown_rejection_threshold_comparison.png)
 
+## MSP AUROC
+
+AUROC was also calculated using MSP confidence as the known-class score.
+
+| Model | OOD Score | AUROC |
+|---|---|---:|
+| ResNet18, improved setup | MSP confidence | 0.7427 |
+
+The score is above random separation, but still shows that MSP alone does not fully separate known and unknown samples.
+
 ## Unknown Class Predictions
 
 The Simple CNN trained only on known animal classes often maps unknown vehicle classes into known animal classes.

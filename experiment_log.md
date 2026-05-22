@@ -99,10 +99,23 @@ A sample is treated as unknown when its maximum softmax confidence is below the 
 | 0.8 | 65.35% | 69.45% |
 | 0.9 | 53.37% | 83.03% |
 
-## 7. Notes
+## 7. MSP AUROC
+
+AUROC was calculated using Maximum Softmax Probability (MSP) as the known-class score.
+
+Known samples were labeled as `1`, and unknown samples were labeled as `0`.
+
+| Model | OOD Score | AUROC |
+|---|---|---:|
+| ResNet18, improved known-only setup | MSP confidence | 0.7427 |
+
+This result shows that MSP provides some separation between known and unknown samples, but the separation is not complete.
+
+## 8. Notes
 
 - ResNet18 improved known-class accuracy compared with the Simple CNN.
 - Better classification accuracy did not automatically remove overconfidence on unknown samples.
 - The improved ResNet18 recipe reduced average unknown confidence compared with the earlier ResNet18 setup.
 - MSP thresholding shows a clear trade-off between accepting known samples and rejecting unknown samples.
-- The next step is to save key plots and add selected figures to the README or reports.
+- MSP AUROC provides a threshold-independent view of the separation between known and unknown samples.
+- The next step is to test stronger OOD scores, such as energy-based scoring, and compare them with MSP.
