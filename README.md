@@ -1,8 +1,8 @@
 # OOD Research Project
 
-This project is a small research-oriented exploration of image classification confidence and out-of-distribution (OOD) behavior using PyTorch.
+This project explores image classification confidence and simple out-of-distribution (OOD) behavior using PyTorch.
 
-The experiments use CIFAR-10, starting from simple neural network baselines and moving toward known vs unknown class evaluation.
+The experiments use CIFAR-10, starting from baseline classifiers and moving toward known vs unknown class evaluation.
 
 ## Current Work
 
@@ -14,6 +14,7 @@ The experiments use CIFAR-10, starting from simple neural network baselines and 
 - Training models on selected known classes only
 - Treating the remaining classes as unknown during evaluation
 - Testing Maximum Softmax Probability (MSP) as a simple OOD baseline
+- Tracking experiments in `experiment_log.md`
 
 ## Current Results
 
@@ -21,13 +22,14 @@ The experiments use CIFAR-10, starting from simple neural network baselines and 
 |---|---|---:|
 | Fully Connected Neural Network | CIFAR-10, all classes | 43.36% |
 | Simple CNN | CIFAR-10, all classes | 64.05% |
-| ResNet18 | CIFAR-10, all classes | 76.47% |
+| ResNet18 | CIFAR-10, all classes, normalization | 76.47% |
+| ResNet18 | CIFAR-10, augmentation, Adam, StepLR, 20 epochs | 83.07% |
 | Simple CNN | Known classes only | 61.02% |
-| ResNet18 | Known classes only | 71.33% |
+| ResNet18 | Known classes only, improved training recipe | 79.70% |
 
 ## Confidence Analysis
 
-Average confidence scores for the Simple CNN trained on all CIFAR-10 classes:
+For the Simple CNN trained on all CIFAR-10 classes:
 
 | Prediction Type | Average Confidence |
 |---|---:|
@@ -59,9 +61,12 @@ Average softmax confidence:
 | Model | Known Confidence | Unknown Confidence |
 |---|---:|---:|
 | Simple CNN | 0.631 | 0.552 |
-| ResNet18 | 0.861 | 0.753 |
+| ResNet18, earlier setup | 0.861 | 0.753 |
+| ResNet18, improved setup | 0.829 | 0.661 |
 
-ResNet18 achieved better known-class accuracy, but it also remained highly confident on many unknown samples.
+The improved ResNet18 model increased known-class accuracy and reduced average confidence on unknown samples, although confidence overlap still remains.
+
+![ResNet18 known vs unknown confidence](reports/figures/resnet18_known_vs_unknown_confidence.png)
 
 ## MSP Thresholding
 
@@ -74,23 +79,41 @@ At threshold `0.8`:
 | Model | Known Accepted | Unknown Rejected |
 |---|---:|---:|
 | Simple CNN | 25.47% | 88.05% |
-| ResNet18 | 71.37% | 51.88% |
+| ResNet18, earlier setup | 71.37% | 51.88% |
+| ResNet18, improved setup | 65.35% | 69.45% |
 
-This shows a trade-off between accepting known samples and rejecting unknown samples. ResNet18 keeps more known samples accepted, but it rejects fewer unknown samples at the same threshold.
+This shows the trade-off between accepting known samples and rejecting unknown samples. The improved ResNet18 setup rejects more unknown samples than the earlier ResNet18 setup, but still does not fully separate known and unknown samples using MSP alone.
+
+![Unknown rejection threshold comparison](reports/figures/unknown_rejection_threshold_comparison.png)
+
+## Unknown Class Predictions
+
+The Simple CNN trained only on known animal classes often maps unknown vehicle classes into known animal classes.
+
+Examples from the confusion matrix:
+
+- airplane → bird
+- ship → bird
+- truck → horse
+
+This suggests that the model assigns unknown samples to the closest known classes instead of recognizing them as unseen.
+
+![Unknown confusion matrix](reports/figures/unknown_confusion_matrix.png)
 
 ## Observations
 
 - ResNet18 performs better than the Simple CNN on known-class classification.
-- Higher classification accuracy does not automatically lead to better OOD rejection with softmax confidence.
-- Simple CNN has lower confidence overall, so it rejects more unknown samples at the same MSP threshold.
-- ResNet18 is more confident on both known and unknown samples.
+- Better classification accuracy does not automatically solve overconfidence on unknown samples.
+- Data augmentation, longer training, and a learning rate scheduler improved ResNet18 accuracy.
+- The improved ResNet18 setup reduced average unknown confidence compared with the earlier ResNet18 setup.
+- MSP thresholding shows a clear trade-off between accepting known samples and rejecting unknown samples.
 
 ## Next Steps
 
-- Save plots automatically for README and reports
-- Add a cleaner comparison table for MSP threshold sweeps
+- Add AUROC-style evaluation for OOD scoring
 - Test energy-based OOD scoring
 - Explore calibration methods such as temperature scaling
+- Refactor repeated dataset/model code into reusable modules
 
 ## Tools
 
