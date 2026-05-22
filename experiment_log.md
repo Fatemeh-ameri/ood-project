@@ -113,9 +113,24 @@ Known samples were labeled as `1`, and unknown samples were labeled as `0`.
 | Max logit | 0.7862 |
 | Logit margin | 0.7195 |
 
+Energy-based scoring performed better than MSP, max logit, and logit margin in this setup.
+
 The improvement from Energy T=1 to Energy T=2 was small, so the result should be interpreted as a minor temperature effect rather than a large gain.
 
-## 8. Notes
+## 8. FPR@95TPR
+
+FPR@95TPR was calculated for MSP and Energy scores.
+
+This metric measures how many unknown samples are incorrectly accepted as known when the true positive rate for known samples is around 95%.
+
+| OOD Score | FPR@95TPR | TPR | Threshold |
+|---|---:|---:|---:|
+| MSP confidence | 0.8315 | 0.9503 | 0.4462 |
+| Energy score, T=2 | 0.7745 | 0.9500 | 4.2428 |
+
+Energy performed better than MSP on this metric, but both scores still accepted many unknown samples as known at high known-class recall.
+
+## 9. Notes
 
 - ResNet18 improved known-class accuracy compared with the Simple CNN.
 - Better classification accuracy did not automatically remove overconfidence on unknown samples.
@@ -123,3 +138,4 @@ The improvement from Energy T=1 to Energy T=2 was small, so the result should be
 - MSP thresholding shows a clear trade-off between accepting known samples and rejecting unknown samples.
 - MSP AUROC provides a threshold-independent view of the separation between known and unknown samples.
 - Energy-based scoring improved AUROC compared with MSP in this setup, although the separation is still not complete.
+- Energy also reduced FPR@95TPR compared with MSP, but the false positive rate remained high.
