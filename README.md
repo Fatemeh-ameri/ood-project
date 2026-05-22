@@ -105,6 +105,17 @@ Energy-based scoring gave the best AUROC in this setup, with a small improvement
 
 ![Energy ROC curve](reports/figures/resnet18_energy_roc_curve.png)
 
+## FPR@95TPR
+
+FPR@95TPR was calculated to evaluate unknown detection when the known-class true positive rate is around 95%.
+
+| OOD Score | FPR@95TPR |
+|---|---:|
+| MSP confidence | 0.8315 |
+| Energy score, T=2 | 0.7745 |
+
+Energy reduced the false positive rate compared with MSP, but both scores still accepted many unknown samples as known.
+
 ## Unknown Class Predictions
 
 The Simple CNN trained only on known animal classes often maps unknown vehicle classes into known animal classes.
@@ -130,8 +141,8 @@ This suggests that the model assigns unknown samples to the closest known classe
 
 ## Next Steps
 
-- Add FPR@95TPR for OOD evaluation
 - Compare MSP and Energy ROC curves in one figure
+- Add feature-distance based OOD scoring
 - Explore calibration methods such as temperature scaling
 - Refactor repeated dataset/model code into reusable modules
 
