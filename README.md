@@ -1,20 +1,20 @@
-# OOD Research Project
+# OOD Detection Experiments on CIFAR-10
 
-This project explores image classification confidence and simple out-of-distribution (OOD) behavior using PyTorch.
+This project explores simple out-of-distribution (OOD) detection experiments on CIFAR-10 using PyTorch.
 
-The experiments use CIFAR-10, starting from baseline classifiers and moving toward known vs unknown class evaluation.
+The work starts with baseline image classification models and then moves toward known-vs-unknown class evaluation using confidence-based OOD scores.
 
-## Current Work
+## What This Project Includes
 
-- Loading and visualizing CIFAR-10
-- Training and evaluating baseline image classification models
-- Saving and loading trained model checkpoints
+- Loading and visualizing CIFAR-10 images
+- Training baseline image classification models
+- Saving and loading model checkpoints
 - Measuring prediction confidence with softmax
 - Comparing confidence for correct and incorrect predictions
-- Training models on selected known classes only
-- Treating the remaining classes as unknown during evaluation
+- Training models only on selected known classes
+- Treating the remaining CIFAR-10 classes as unknown during evaluation
 - Testing Maximum Softmax Probability (MSP) as a simple OOD baseline
-- Comparing several OOD scores, including MSP, Energy, Max Logit, and Logit Margin
+- Comparing OOD scores such as MSP, Energy, Max Logit, and Logit Margin
 - Tracking experiments in `experiment_log.md`
 
 ## Current Results
@@ -139,11 +139,31 @@ This suggests that the model assigns unknown samples to the closest known classe
 - MSP thresholding shows a clear trade-off between accepting known samples and rejecting unknown samples.
 - Energy-based scoring performed better than MSP in this setup, but the separation between known and unknown samples is still not complete.
 
-## Next Steps
+## How to Run
 
-- Add feature-distance based OOD scoring
-- Explore calibration methods such as temperature scaling
-- Refactor repeated dataset/model code into reusable modules
+Clone the repository:
+
+```bash
+git clone https://github.com/Fatemeh-ameri/ood-project.git
+cd ood-project
+```
+
+Create and activate a virtual environment:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install the required packages:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the experiment scripts from the `src` folder.
+
+> Note: The exact scripts may change as the project is refactored. The experiment results are also summarized in `experiment_log.md`.
 
 ## Tools
 
@@ -154,3 +174,9 @@ This suggests that the model assigns unknown samples to the closest known classe
 - Matplotlib
 - NumPy
 - Git / GitHub
+
+## Next Steps
+
+- Add feature-distance based OOD scoring
+- Explore calibration methods such as temperature scaling
+- Refactor repeated dataset and model code into reusable modules
