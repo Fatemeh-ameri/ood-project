@@ -164,19 +164,3 @@ pip install -r requirements.txt
 Run the experiment scripts from the `src` folder.
 
 > Note: The exact scripts may change as the project is refactored. The experiment results are also summarized in `experiment_log.md`.
-
-## Tools
-
-- Python
-- PyTorch
-- Torchvision
-- Scikit-learn
-- Matplotlib
-- NumPy
-- Git / GitHub
-
-## Next Steps
-
-- Add feature-distance based OOD scoring
-- Explore calibration methods such as temperature scaling
-- Refactor repeated dataset and model code into reusable modules
